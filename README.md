@@ -8,17 +8,17 @@ $ npm install
 
 ### To run on Linux or Mac
 ``` bash
-$ DEBUG=myapp:* npm start
+$ DEBUG=xenia-api:* npm start
 ```
 
 ### To run on Windows Powershell
 ``` bash
-PS> $env:DEBUG='myapp:*'; npm start
+PS> $env:DEBUG='xenia-api:*'; npm start
 ```
 
 ### To run on Windows Command Prompt
 ``` bash
-> set DEBUG=myapp:* & npm start
+> set DEBUG=xenia-api:* & npm start
 ```
 
 
