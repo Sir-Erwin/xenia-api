@@ -1,5 +1,11 @@
 ## Getting Started
 
+### First install dependencies
+```bash
+$ npm install
+```
+
+
 ### To run on Linux or Mac
 ``` bash
 $ DEBUG=myapp:* npm start
