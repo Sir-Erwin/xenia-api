@@ -6,6 +6,8 @@
 $ npm install
 ```
 
+<br/>
+
 ### To run on Linux or Mac
 
 ```bash
