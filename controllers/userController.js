@@ -8,22 +8,44 @@ router.use(express.json());
 
 
 exports.userAuthHome = (req, res, next) => {
-  res.status(400);
-  res.send("User Controller Works Fine Can Only Make POST Requests");
+  res.status(403).json({message: "This Route Works", users: db.getAllUsers()});
 };
 
-exports.login = (req, res, next) => {
-  user_email = req.body.email;
-  user_pass = req.body.pass;
+exports.login = async (req, res, next) => {
+  const user_email = req.body.email;
+  const user_pass = req.body.pass;
 
-  userFromDB = db.findUserByEmail(user_email);
-  if(!userFromDB){
-    res.status()
-    res.send('Wrong Username or Password');
+  try{
+    userFromDB = await db.findUserByEmail(user_email);
+    if(!userFromDB){ //username does not exist
+      res.status(404).json({ message: 'Wrong Username or Password'});
+    }
+
+    else if(await (!bcrypt.compare(user_pass, userFromDB.pass))){ // Wrong Password
+      res.status(404).json({ message: 'Wrong Username or Password'});
+    }
+
+    else{
+      res.status(200).json({message: "Login Successfull", user: user_email })
+    }
+
+  } catch(error){
+    res.status(500).json({ message: 'Error registering user', error });
+    console.log(error);
   }
+  
+
+
 };
 
-exports.register = (req, res, next) => {
-  hashedPass = bcrypt.hash(req.body.pass, 10);
-  
+exports.register = async (req, res, next) => {
+  try{
+    //console.log(req.body.pass);
+    const hashedPass = await bcrypt.hash(req.body.pass, 10);
+    db.createUser({email: req.body.email, pass: hashedPass});
+    res.status(201).json({ message: 'User registered successfully', user: req.body.email });
+  } catch(error){
+    res.status(500).json({ message: 'Error registering user', error });
+    console.log(error);
+  }
 };

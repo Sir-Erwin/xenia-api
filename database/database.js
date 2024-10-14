@@ -1,5 +1,5 @@
 // database.js - Mock implementation for now
-let users = []; // Mock in-memory data store
+let users = [{id:1,email:"test@example.com", pass:"$2b$10$CXSVyLnnQmK8th7/ln6qBOIKfLPW1q.8YBPyKtKxHZiK9.gICXbBm"}]; // Mock in-memory data store
 
 module.exports = {
     findUserByEmail: (email) => {
@@ -10,7 +10,7 @@ module.exports = {
         const newUser = {
             id: users.length + 1,
             email: userData.email,
-            passwrd: userData.hashedPass
+            pass: userData.pass
         };
         users.push(newUser);
         return newUser;
