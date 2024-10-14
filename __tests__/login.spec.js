@@ -1,25 +1,93 @@
-// 
+const request = require('supertest');
+const express = require('express');
+const bcrypt = require('bcrypt');
+const authController = require('../controllers/userController'); 
+const db = require('../database/database'); 
+
+const app = express();
+app.use(express.json()); 
+app.post('/users/login', authController.login); 
+
+// Mocking the database
+jest.mock('../database/database');
+
 describe("Login Page Functionalities", ()=>{
-    let request;
+    const mockUser = {email: "test@example.com",pass: "password123"} ;
+    const mockHashPass = "$2b$10$CXSVyLnnQmK8th7/ln6qBOIKfLPW1q.8YBPyKtKxHZiK9.gICXbBm";
     beforeEach(()=>{
-        request = {
-            body: {
-                email: "fake@fakemail.com",
-                password: "fakePass1!"
-            }
-        }
+        db.findUserByEmail.mockResolvedValue({email: mockUser.email, pass: mockHashPass});
+    });
+    afterEach(() => {
+        jest.clearAllMocks(); 
     });
 
+    describe("Missing Req Body args", () => {
+        test("No Email", async ()=>{
+            const res = await request(app)
+                .post("/users/login")
+                .send({data: "invalid"})
+            expect(res.status).toBe(400);
+        });
+    })
+
     describe("Email Formatting", () => {    
-        test.todo("Checks if @ sign exists");
-        test.todo("Checks for valid mail server domain name");
+        test("Checks if @ sign exists", async ()=>{
+            const response = await request(app)
+                .post("/users/login")
+                .send({email: "invalid_email.com", pass: "will not check for passwrd"});
+
+            expect(response.status).toBe(400);
+            expect(response.body.message).toBe('Invalid Email');
+        });
+        
+        test("Checks for valid mail server domain name", async ()=>{
+            const response = await request(app)
+                .post("/users/login")
+                .send({email: "invalid_email@mailserver", pass: "will not check for passwrd"});
+
+            expect(response.status).toBe(400);
+            expect(response.body.message).toBe('Invalid Email');
+        });
     
     });
     
     describe("DB Authentication", ()=>{
-        test.todo("Checks if User with the Email Exists");
+        test("New User, Does Not Exists", async ()=>{
+            const response = await request(app)
+                .post("/users/login")
+                .send({email: "random@email.com", pass: "random password"});
+
+            expect(response.status).toBe(404);
+        });
+
+        test("Wrong Password, 404", async ()=>{
+            const response = await request(app)
+                .post("/users/login")
+                .send({email: mockUser.email, pass: "random password"});
+
+            expect(response.status).toBe(404);
+        });
     
-        test.todo("Sends 400 OK if Password is Correct")
+        test("Sends 400 OK if Email and Password is Correct", async ()=>{
+            const response = await request(app)
+                .post("/users/login")
+                .send(mockUser);
+
+            expect(response.status).toBe(200);
+            expect(response.body.user).toBe(mockUser.email);
+        });
+    })
+
+    describe("Server Error Catching Mechanism", () => {
+        test('should return 500 if there is a server error', async () => {
+            db.findUserByEmail.mockRejectedValue(new Error('Database error')); // Simulate a DB error
+        
+            const response = await request(app)
+              .post('/users/login')
+              .send(mockUser);
+        
+            expect(response.status).toBe(500);
+          });
     })
 });
 
