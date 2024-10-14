@@ -29,7 +29,6 @@ exports.login = async (req, res, next) => {
         res.status(404).json({ message: 'Wrong Username or Password' });
       }
 
-
       else if (! await bcrypt.compare(user_pass, userFromDB.pass)) { // Wrong Password
         res.status(404).json({ message: 'Wrong Username or Password' });
       }
@@ -62,7 +61,7 @@ exports.register = async (req, res, next) => {
 
     } catch (error) {
       res.status(500).json({ message: 'Error registering user', error });
-      console.log(error);
+      //console.log(error);
     }
   }
 };

@@ -52,11 +52,13 @@ describe("Login Page Functionalities", () => {
 
     describe("DB Authentication", () => {
         test("New User, Does Not Exists", async () => {
+            db.findUserByEmail.mockResolvedValue(null);
             const response = await request(app)
                 .post("/users/login")
-                .send({ email: "random@email.com", pass: "random password" });
+                .send({ email: "erwin@jk.com", pass: "random password" });
 
             expect(response.status).toBe(404);
+            expect(response.body.message).toBe("Wrong Username or Password");
         });
 
         test("Wrong Password, 404", async () => {
