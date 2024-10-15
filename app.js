@@ -9,16 +9,6 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-/*const port = 3000;
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-});
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-});*/
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
