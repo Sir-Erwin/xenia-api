@@ -13,10 +13,10 @@ exports.manage = async (req, res) => {
     // res.status(200).json({message: 'Accessing the funciton - correct pathing'});
     const { eventName, eventDescrip, eventLoc, reqSkills, urg, date } = req.body;
 
-    //looks if same event is already created
-    event_curr = await db.findEventByNameAndDate(eventName);
-
     try {
+        //looks if same event is already created
+        event_curr = await db.findEventByNameAndDate(eventName);
+
         //Given event does not already exist, so we create it
         if(!event_curr){
             // res.status(205).json({ messgae: 'entered if statement properly'});

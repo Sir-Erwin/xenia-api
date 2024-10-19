@@ -86,8 +86,15 @@ describe('Event Management - manage function', () => {
 
     test('should return 500 if there is an error during creation or update', async () => {
         // Mocking the database functions to throw an error
-        db.findEventByNameAndDate.mockImplementation(() => {
-            throw new Error('Database error');
+        db.findEventByNameAndDate.mockRejectedValueOnce(new Error('Database error'));
+        db.createEvent.mockReturnValue({
+            id: 2,
+            eventName: 'New Event',
+            eventDescrip: 'Description of New Event',
+            eventLoc: 'Location of New Event',
+            reqSkills: ['Skill A'],
+            urg: 'Medium',
+            date: '2024-11-01'
         });
 
         const newEvent = {

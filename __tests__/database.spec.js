@@ -48,7 +48,7 @@ describe('Database Module', () => {
     });
 });
 
-//NEWCODE
+//Tests for Event related functions
 describe('Database Tests - Events', () => {
     beforeEach(() => {
         // Reset mock events before each test
