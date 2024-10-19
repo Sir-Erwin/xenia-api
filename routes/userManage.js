@@ -1,15 +1,14 @@
 // routes/userManage.js
 
-//User, UpdateUser, GetUser not functioning as there is no DB connection yet
-
 const express = require('express');
+const { updateUser, getUsers } = require('../controllers/userManagementController');
+
 const router = express.Router();
-const { updateUser, getUsers } = require('../controllers/userController');
 
-// Route to update user data based on username
-router.post('/users', updateUser);
+// Route to update a user by username
+router.put('/models/users/:username', updateUser);
 
-// Route to fetch all users
-router.get('/users', getUsers);
+// Route to get all users
+router.get('/models/users', getUsers);
 
 module.exports = router;
