@@ -10,6 +10,7 @@ router.use(express.json());
 
 //either creates new event or updates existing one if Entered event already exists
 exports.manage = async (req, res) => {
+    // res.status(200).json({message: 'Accessing the funciton - correct pathing'});
     const { eventName, eventDescrip, eventLoc, reqSkills, urg, date } = req.body;
 
     //looks if same event is already created
