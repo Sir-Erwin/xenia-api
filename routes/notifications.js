@@ -1,15 +1,17 @@
+// routes/notifications.js
+
 const express = require('express');
-const {
-  registerUserForEvent,
-  notifyUsersAboutEvent,
-} = require('../controllers/notificationController');
+const { createEvent, registerUserToEvent, getAllEvents } = require('../controllers/notificationController');
 
 const router = express.Router();
 
-// Route to register user for an event
-router.post('/register', registerUserForEvent);
+// Route to create a new event
+router.post('/model/event', createEvent);
 
-// Route to notify users about an event
-router.post('/notify', notifyUsersAboutEvent);
+// Route to register a user for an event
+router.post('/model/event/:eventId/register', registerUserToEvent);
+
+// Route to get all events
+router.get('/model/event', getAllEvents);
 
 module.exports = router;
