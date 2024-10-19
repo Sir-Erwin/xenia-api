@@ -1,42 +1,25 @@
-// controllers/userManagementController.js
+// controllers/userController.js
 
-//Everything using User, getUser, and updateUser cannot be used until the DB is implemented as there is nowhere to GET/POST user info to
-
-const User = require('../models/userModel'); //Will be used once DB is implemented
+const { User } = require('../database/mockDatabase');
 
 const updateUser = async (req, res) => {
-  const { username, name, address, city, zipcode, state, skills, availability } = req.body;
+  const { username } = req.params; // Get username from URL parameters
+  const { nameofuser, address, city, zipcode, state, skills, availability } = req.body;
 
   try {
-    // Find the user by username
-    const user = await User.findOne({ username });
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // Update user fields if provided in the request
-    user.name = name || user.name;
-    user.address = address || user.address;
-    user.city = city || user.city;
-    user.zipcode = zipcode || user.zipcode;
-    user.state = state || user.state;
-    user.skills = skills || user.skills;
-    user.availability = availability || user.availability;
-
-    const updatedUser = await user.save();
-    res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+    const updatedUser = await User.update(username, { nameofuser, address, city, zipcode, state, skills, availability });
+    return res.status(200).json({ message: 'User updated successfully', user: updatedUser });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating user', error });
+    return res.status(404).json({ message: error.message });
   }
 };
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    res.status(200).json(users);
+    const users = await User.findAll();
+    return res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching users', error });
+    return res.status(500).json({ message: 'Error retrieving users', error });
   }
 };
 
