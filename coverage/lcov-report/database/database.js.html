@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.42% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>39/57</span>
+                <span class='fraction'>57/57</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.42% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/57</span>
+                <span class='fraction'>57/57</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -147,29 +147,29 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -203,37 +203,37 @@ const createUser = (userData) =&gt; {
     return newUser;
 };
 &nbsp;
-const getAllEvents = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    return events;  //also only for testing; substituting for database information</span>
-<span class="cstat-no" title="statement not covered" >};</span>
+const getAllEvents = () =&gt; {
+    return events;  //also only for testing; substituting for database information
+};
 &nbsp;
-const findEventByNameAndDate = <span class="fstat-no" title="function not covered" >(eventName, date) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    db = getAllEvents();</span>
-<span class="cstat-no" title="statement not covered" >    return db.find(event =&gt; event.eventName === eventName &amp;&amp; event.date === date);</span>
-<span class="cstat-no" title="statement not covered" >};</span>
+const findEventByNameAndDate = (eventName) =&gt; {
+    db = getAllEvents();
+    return db.find(event =&gt; event.eventName === eventName);
+};
 &nbsp;
 &nbsp;
-const createEvent = (<span class="fstat-no" title="function not covered" >eventData) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    db = getAllEvents();</span>
-<span class="cstat-no" title="statement not covered" >    const newEvent = {</span>
-<span class="cstat-no" title="statement not covered" >        id: events.length+1,</span>
-<span class="cstat-no" title="statement not covered" >        eventName: eventData.eventName,</span>
-<span class="cstat-no" title="statement not covered" >        eventDescrip: eventData.eventDescrip,</span>
-<span class="cstat-no" title="statement not covered" >        eventLoc: eventData.eventLoc,</span>
-<span class="cstat-no" title="statement not covered" >        reqSkills: eventData.reqSkills,</span>
-<span class="cstat-no" title="statement not covered" >        urg: eventData.urg,</span>
-<span class="cstat-no" title="statement not covered" >        date: eventData.date</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    events.push(newEvent);</span>
-<span class="cstat-no" title="statement not covered" >    return newEvent;</span>
-<span class="cstat-no" title="statement not covered" >};</span>
+const createEvent = (eventData) =&gt; {
+    db = getAllEvents();
+    const newEvent = {
+        id: events.length+1,
+        eventName: eventData.eventName,
+        eventDescrip: eventData.eventDescrip,
+        eventLoc: eventData.eventLoc,
+        reqSkills: eventData.reqSkills,
+        urg: eventData.urg,
+        date: eventData.date
+    }
+    events.push(newEvent);
+    return newEvent;
+};
 &nbsp;
 // Helper function to reset the users for test isolation
 const __setMockUsers = (newUsers) =&gt; {
     users = [...newUsers]; // Reset users
 };
 &nbsp;
-module.exports = { getAllUsers, findUserByEmail, createUser, __setMockUsers, findEventByNameAndDate, createEvent };
+module.exports = { getAllUsers, findUserByEmail, createUser, __setMockUsers, findEventByNameAndDate, createEvent, getAllEvents };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -241,7 +241,7 @@ module.exports = { getAllUsers, findUserByEmail, createUser, __setMockUsers, fin
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-10-19T04:35:55.588Z
+                at 2024-10-19T05:33:53.649Z
             </div>
         <script src="../prettify.js"></script>
         <script>

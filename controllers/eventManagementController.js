@@ -1,3 +1,4 @@
+//eventManagementController.js
 const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcrypt");
@@ -12,18 +13,18 @@ exports.manage = async (req, res) => {
     const { eventName, eventDescrip, eventLoc, reqSkills, urg, date } = req.body;
 
     //looks if same event is already created
-    const event_curr = db.findEventByNameAndDate();
+    const event_curr = db.findEventByNameAndDate(eventName);
 
     try {
         //Given event does not already exist, so we create it
         if(!event_curr){
             db.createEvent({id: events.length+1,
-                eventName: eventData.eventName,
-                eventDescrip: eventData.eventDescrip,
-                eventLoc: eventData.eventLoc,
-                reqSkills: eventData.reqSkills,
-                urg: eventData.urg,
-                date: eventData.date});
+                eventName: eventName,
+                eventDescrip: eventDescrip,
+                eventLoc: eventLoc,
+                reqSkills: reqSkills,
+                urg: urg,
+                date: date});
             res.status(200).json({ message: 'New event created successfully', Event: eventName });
         }
         else{   //update existing event
@@ -33,6 +34,7 @@ exports.manage = async (req, res) => {
             event_curr.reqSkills = reqSkills;
             event_curr.urg = urg;
             event_curr.date = date;
+            res.status(201).json({ message: 'Existing event updated successfully'});
         }
     } catch(error) {
         res.status(500).json({ message: 'Error Creating/Updating Event', error})

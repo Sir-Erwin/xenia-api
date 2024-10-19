@@ -1,3 +1,4 @@
+//eventManagement.specs.js
 const request = require('supertest');
 const express = require('express');
 const app = express();
@@ -5,7 +6,7 @@ const db = require('../database/database');
 const router = require('../routes/eventManagement'); // Replace 'yourRouterFile' with the actual file path
 
 app.use(express.json());
-app.use('/events', router);  // Assuming '/events' is the route
+app.use('/event_mgmt_form', router);  // Assuming '/events' is the route
 
 jest.mock('../database/database');  // Mock the database module
 
@@ -16,7 +17,7 @@ describe('Event Management - manage function', () => {
 
     test('should create a new event when event does not exist', async () => {
         // Mocking the database functions
-        db.findEventByNameAndDate.mockReturnValue(undefined);  // Event does not exist
+        db.findEventByNameAndDate.mockImplementationOnce(() => (undefined));  // Event does not exist
         db.createEvent.mockReturnValue({
             id: 2,
             eventName: 'New Event',
@@ -37,7 +38,7 @@ describe('Event Management - manage function', () => {
         };
 
         const response = await request(app)
-            .post('/events/manage')  // POST request to /events/manage
+            .post('/event_mgmt_form')  // POST request to /events/manage
             .send(newEvent);
 
         expect(response.status).toBe(200);
@@ -69,7 +70,7 @@ describe('Event Management - manage function', () => {
         };
 
         const response = await request(app)
-            .post('/events/manage')  // POST request to /events/manage
+            .post('/event_mgmt_form')  // POST request to /events/manage
             .send(updatedEvent);
 
         expect(response.status).toBe(201);
@@ -96,7 +97,7 @@ describe('Event Management - manage function', () => {
         };
 
         const response = await request(app)
-            .post('/events/manage')  // POST request to /events/manage
+            .post('/event_mgmt_form')  // POST request to /events/manage
             .send(newEvent);
 
         expect(response.status).toBe(500);

@@ -28,9 +28,9 @@ const getAllEvents = () => {
     return events;  //also only for testing; substituting for database information
 };
 
-const findEventByNameAndDate = (eventName, date) => {
+const findEventByNameAndDate = (eventName) => {
     db = getAllEvents();
-    return db.find(event => event.eventName === eventName && event.date === date);
+    return db.find(event => event.eventName === eventName);
 };
 
 
@@ -54,4 +54,4 @@ const __setMockUsers = (newUsers) => {
     users = [...newUsers]; // Reset users
 };
 
-module.exports = { getAllUsers, findUserByEmail, createUser, __setMockUsers, findEventByNameAndDate, createEvent };
+module.exports = { getAllUsers, findUserByEmail, createUser, __setMockUsers, findEventByNameAndDate, createEvent, getAllEvents };
