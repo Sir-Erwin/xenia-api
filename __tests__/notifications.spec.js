@@ -1,3 +1,5 @@
+//__tests__/notifications.spec.js
+
 const { registerUserToEvent, createEvent } = require('../controllers/notificationController');
 const { Event, User } = require('../database/mockDatabase');
 const nodemailer = require('nodemailer');
