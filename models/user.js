@@ -1,8 +1,9 @@
 //models/user.js
 //contains a model of a User
 class User {
-    constructor(username, nameofuser, address, city, zipcode, state, skills, availability) {
+    constructor(username, email, nameofuser, address, city, zipcode, state, skills, availability) {
       this.username = username;
+      this.email = email;
       this.nameofuser = nameofuser;
       this.address = address;
       this.city = city;
