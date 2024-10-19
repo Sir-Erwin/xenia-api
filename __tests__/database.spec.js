@@ -47,3 +47,55 @@ describe('Database Module', () => {
         expect(allUsers[1].email).toBe('new@example.com');
     });
 });
+
+//NEWCODE
+describe('Database Tests - Events', () => {
+    beforeEach(() => {
+        // Reset mock events before each test
+        events = [{
+            id: 1,
+            eventName: "Event 1",
+            eventDescrip: "Description of Event 1",
+            eventLoc: "Location of Event 1",
+            reqSkills: ["Skill 1"],
+            urg: "High",
+            date: "2024-10-18"
+        }];
+    });
+
+    test('getAllEvents should return all events', () => {
+        const allEvents = getAllEvents();
+        expect(allEvents.length).toBe(1);
+        expect(allEvents[0].eventName).toBe("Event 1");
+    });
+
+    test('findEventByNameAndDate should return event if it matches name and date', () => {
+        const event = findEventByNameAndDate("Event 1", "2024-10-18");
+        expect(event).toBeDefined();
+        expect(event.eventName).toBe("Event 1");
+    });
+
+    test('findEventByNameAndDate should return undefined if no event matches', () => {
+        const event = findEventByNameAndDate("Nonexistent Event", "2024-10-18");
+        expect(event).toBeUndefined();
+    });
+
+    test('createEvent should add a new event', () => {
+        const newEvent = {
+            eventName: "Event 2",
+            eventDescrip: "Description of Event 2",
+            eventLoc: "Location of Event 2",
+            reqSkills: ["Skill 2"],
+            urg: "Medium",
+            date: "2024-11-01"
+        };
+        const createdEvent = createEvent(newEvent);
+
+        expect(createdEvent).toBeDefined();
+        expect(createdEvent.id).toBe(2);
+        expect(createdEvent.eventName).toBe("Event 2");
+
+        const allEvents = getAllEvents();
+        expect(allEvents.length).toBe(2);
+    });
+});

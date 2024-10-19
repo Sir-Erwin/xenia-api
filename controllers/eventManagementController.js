@@ -6,12 +6,6 @@ const db = require("../database/database")
 
 router.use(express.json());
 
-/*
-validEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //console.log(emailRegex.test(email));
-  return emailRegex.test(email);
-};*/
 
 //either creates new event or updates existing one if Entered event already exists
 exports.manage = async (req, res) => {
