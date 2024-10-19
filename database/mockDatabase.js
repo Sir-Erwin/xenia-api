@@ -26,15 +26,22 @@ const User = {
 };
 
 const Event = {
-  findById: jest.fn(id => Promise.resolve(events.find(event => event._id === id))),
-  create: jest.fn(data => {
-    const newEvent = { ...data };
+  create: (data) => {
+    const newEvent = { id: events.length + 1, ...data };
     events.push(newEvent);
-    return Promise.resolve(newEvent);
-  }),
-  clear: () => {
-    events = [];
+    return newEvent;
   },
+  registerUser: (eventId, user) => {
+    const event = events.find(event => event.id === parseInt(eventId));
+    if (event) {
+      event.attendees = event.attendees || [];
+      event.attendees.push(user);
+      return event;
+    }
+    return null;
+  },
+  findById: (id) => events.find(event => event.id === parseInt(id)),
+  findAll: () => events,
 };
 
 module.exports = { User, Event };
