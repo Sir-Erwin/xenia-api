@@ -1,4 +1,4 @@
-const db = require('./database');
+const db = require('../database/voldatabase');
 
 describe('Volunteer Matching Module', () => {
     let initialVolunteers, initialEvents;
