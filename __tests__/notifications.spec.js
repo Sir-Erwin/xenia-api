@@ -1,98 +1,101 @@
-const request = require('supertest');
-const express = require('express');
-const notificationRoutes = require('../routes/notificationRoutes');
-const { User, Event } = require('../database');
+const { registerUserToEvent, createEvent } = require('../controllers/notificationController');
+const { Event, User } = require('../database/mockDatabase');
+const nodemailer = require('nodemailer');
 
-const app = express();
-app.use(express.json());
-app.use('/api', notificationRoutes);
+// Mock nodemailer
+jest.mock('nodemailer');
 
-describe('Notification Controller with Mock DB', () => {
-  beforeEach(() => {
-    jest.clearAllMocks(); // Clear any previous mock calls
-    User.clear(); // Clear the mock user data
-    Event.clear(); // Clear the mock event data
-  });
+// Set up the mock database
+beforeEach(() => {
+  Event.clear(); // Clear mock event data before each test
+  User.clear();  // Clear mock user data before each test
+});
 
-  describe('POST /api/register', () => {
-    it('should register a new user for an event', async () => {
-      const mockEventId = '605c72ef1e8a2e45a01e0f69'; // Example event ID
-      Event.create({ _id: mockEventId, name: 'Sample Event', date: '2024-01-01' }); // Create a mock event
+// Mock the email transporter sendMail function
+const sendMailMock = jest.fn((mailOptions, callback) => {
+  callback(null, { response: 'Email sent' });
+});
 
-      const response = await request(app)
-        .post('/api/register')
-        .send({ email: 'user@example.com', eventId: mockEventId });
+// Set up the nodemailer mock to return a fake transport object
+nodemailer.createTransport.mockReturnValue({
+  sendMail: sendMailMock,
+});
 
-      expect(response.status).toBe(200);
-      expect(response.body.message).toBe('User registered for event');
-      expect(User.create).toHaveBeenCalledWith({ email: 'user@example.com', events: [mockEventId] });
-    });
+describe('Event Controller', () => {
 
-    it('should add an existing user to an event', async () => {
-      const mockEventId = '605c72ef1e8a2e45a01e0f69'; // Example event ID
-      Event.create({ _id: mockEventId, name: 'Sample Event', date: '2024-01-01' }); // Create a mock event
-      User.create({ email: 'user@example.com', events: [] }); // Create a mock user
+  describe('registerUserToEvent', () => {
+    it('should register a user to an event and send a notification email', async () => {
+      // Arrange
+      const eventData = { title: 'JavaScript Conference', description: 'A JS event', date: '2024-11-15' };
+      const newEvent = Event.create(eventData); // Create a mock event
 
-      const response = await request(app)
-        .post('/api/register')
-        .send({ email: 'user@example.com', eventId: mockEventId });
+      const req = {
+        params: { eventId: newEvent.id },
+        body: {
+          email: 'user@example.com',
+          name: 'John Doe',
+        },
+      };
 
-      expect(response.status).toBe(200);
-      expect(response.body.message).toBe('User registered for event');
-      expect(User.findOne).toHaveBeenCalled(); // Ensure findOne was called
-    });
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
 
-    it('should return 500 on error', async () => {
-      User.findOne.mockImplementationOnce(() => Promise.reject(new Error('Database error')));
+      // Act
+      await registerUserToEvent(req, res);
 
-      const response = await request(app)
-        .post('/api/register')
-        .send({ email: 'user@example.com', eventId: 'some_event_id' });
-
-      expect(response.status).toBe(500);
-      expect(response.body.message).toBe('Error registering user');
-    });
-  });
-
-  describe('POST /api/notify', () => {
-    it('should notify users about an event', async () => {
-      const mockEventId = '605c72ef1e8a2e45a01e0f69'; // Example event ID
-      const event = await Event.create({ _id: mockEventId, name: 'Sample Event', date: '2024-01-01' });
-      await User.create({ email: 'user@example.com', events: [mockEventId] }); // Register user for the event
-
-      const nodemailer = require('nodemailer');
-      const sendMailMock = jest.fn();
-      nodemailer.createTransport = jest.fn().mockReturnValue({
-        sendMail: sendMailMock,
+      // Assert
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        message: 'User registered successfully',
+        event: {
+          id: newEvent.id,
+          title: 'JavaScript Conference',
+          description: 'A JS event',
+          date: '2024-11-15',
+          attendees: [{
+            id: 1,
+            email: 'user@example.com',
+            name: 'John Doe',
+          }],
+        },
       });
 
-      const response = await request(app)
-        .post('/api/notify')
-        .send({ eventId: mockEventId });
-
-      expect(response.status).toBe(200);
-      expect(response.body.message).toBe('Notifications sent');
-      expect(sendMailMock).toHaveBeenCalledTimes(1); // Ensure sendMail was called once
+      // Verify that the email was sent
+      expect(sendMailMock).toHaveBeenCalledTimes(1);
+      expect(sendMailMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          to: 'user@example.com',
+          subject: `Event Registration: JavaScript Conference`,
+          text: expect.stringContaining('You have successfully registered for the event: "JavaScript Conference"'),
+        }),
+        expect.any(Function)
+      );
     });
 
-    it('should return 404 if the event is not found', async () => {
-      const response = await request(app)
-        .post('/api/notify')
-        .send({ eventId: 'invalid_event_id' });
+    it('should return 404 if event does not exist', async () => {
+      // Arrange
+      const req = {
+        params: { eventId: '999' }, // Non-existing event
+        body: {
+          email: 'user@example.com',
+          name: 'John Doe',
+        },
+      };
 
-      expect(response.status).toBe(404);
-      expect(response.body.message).toBe('Event not found');
-    });
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
 
-    it('should return 500 on error', async () => {
-      Event.findById.mockImplementationOnce(() => Promise.reject(new Error('Database error')));
+      // Act
+      await registerUserToEvent(req, res);
 
-      const response = await request(app)
-        .post('/api/notify')
-        .send({ eventId: 'some_event_id' });
-
-      expect(response.status).toBe(500);
-      expect(response.body.message).toBe('Error sending notifications');
+      // Assert
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Event not found' });
     });
   });
 });
+
