@@ -1,75 +1,70 @@
-const nodemailer = require('nodemailer');
-const User = require('../models/User');
-const Event = require('../models/Event');
+// controllers/notificationController.js
 
-// Configure Nodemailer transporter
+const { Event, User } = require('../database/mockDatabase');
+const nodemailer = require('nodemailer');
+
+// Create a basic email transporter using nodemailer
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // Using Gmail as the email service 
+  service: 'gmail', 
   auth: {
-    user: process.env.EMAIL_USER,  // Your email
-    pass: process.env.EMAIL_PASS,   // Your email password or app-specific password
+    user: 'your-email@gmail.com',
+    pass: 'your-email-password', 
   },
 });
 
-// Register user for an event
-const registerUserForEvent = async (req, res) => {
-  const { email, eventId } = req.body;
+const sendNotification = (user, event) => {
+  const mailOptions = {
+    from: 'your-email@gmail.com',
+    to: user.email,
+    subject: `Event Registration: ${event.title}`,
+    text: `Hello ${user.name},\n\nYou have successfully registered for the event: "${event.title}" happening on ${event.date}.\n\nThank you!`,
+  };
 
-  try {
-    let user = await User.findOne({ email });
-
-    if (!user) {
-      user = await User.create({ email, events: [eventId] });
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log('Error sending email:', error);
     } else {
-      if (!user.events.includes(eventId)) {
-        user.events.push(eventId);
-        await user.save();
-      }
+      console.log('Email sent: ' + info.response);
     }
-
-    return res.status(200).json({ message: 'User registered for event', user });
-  } catch (error) {
-    return res.status(500).json({ message: 'Error registering user', error });
-  }
+  });
 };
 
-// Notify users about an event
-const notifyUsersAboutEvent = async (req, res) => {
-  const { eventId } = req.body;
+const createEvent = (req, res) => {
+  const { title, description, date } = req.body;
 
-  try {
-    const event = await Event.findById(eventId);
-    const users = await User.find({ events: eventId });
-
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
-
-    users.forEach(user => {
-      // Send notification email
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: user.email,
-        subject: `Notification for ${event.name}`,
-        text: `You are registered for the event: ${event.name} on ${event.date}.`,
-      };
-
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error('Error sending email:', error);
-        } else {
-          console.log('Email sent:', info.response);
-        }
-      });
-    });
-
-    return res.status(200).json({ message: 'Notifications sent' });
-  } catch (error) {
-    return res.status(500).json({ message: 'Error sending notifications', error });
+  if (!title || !date) {
+    return res.status(400).json({ message: 'Title and date are required' });
   }
+
+  const newEvent = Event.create({ title, description, date });
+  res.status(201).json({ message: 'Event created successfully', event: newEvent });
+};
+
+const registerUserToEvent = (req, res) => {
+  const { email, name } = req.body;
+  const { eventId } = req.params;
+
+  const user = User.findByEmail(email) || User.create({ email, name });
+
+  const event = Event.registerUser(eventId, user);
+
+  if (event) {
+    // Send a notification email
+    sendNotification(user, event);
+    return res.status(200).json({ message: 'User registered successfully', event });
+  }
+
+  return res.status(404).json({ message: 'Event not found' });
+};
+
+const getAllEvents = (req, res) => {
+  const events = Event.findAll();
+  res.status(200).json(events);
 };
 
 module.exports = {
-  registerUserForEvent,
-  notifyUsersAboutEvent,
+  createEvent,
+  registerUserToEvent,
+  getAllEvents,
 };
+
