@@ -14,12 +14,13 @@ exports.manage = async (req, res) => {
     const { eventName, eventDescrip, eventLoc, reqSkills, urg, date } = req.body;
 
     //looks if same event is already created
-    const event_curr = db.findEventByNameAndDate(eventName);
+    event_curr = await db.findEventByNameAndDate(eventName);
 
     try {
         //Given event does not already exist, so we create it
         if(!event_curr){
-            db.createEvent({id: events.length+1,
+            // res.status(205).json({ messgae: 'entered if statement properly'});
+            db.createEvent({
                 eventName: eventName,
                 eventDescrip: eventDescrip,
                 eventLoc: eventLoc,
