@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
+    "refresh": "rm -r node_modules/; npm install",
     "test": "jest --watchAll --verbose",
-    "test-cover": "jest --coverage"
+    "test-cover": "jest --coverage",
+    "clean": "rm -r node_modules/"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

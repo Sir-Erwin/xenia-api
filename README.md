@@ -3,7 +3,7 @@
 ### First install dependencies
 
 ```bash
-$ npm install
+$ npm run refresh
 ```
 
 <br/>

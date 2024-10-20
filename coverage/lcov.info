@@ -1,4 +1,5 @@
 TN:
+
 SF:controllers\eventManagementController.js
 FN:12,Object.<anonymous>.exports.manage
 FNF:1
@@ -60,13 +61,14 @@ BRH:4
 end_of_record
 TN:
 SF:controllers\userController.js
+
 FN:9,validEmail
 FN:15,Object.<anonymous>.exports.userAuthHome
 FN:19,Object.<anonymous>.exports.login
 FN:47,Object.<anonymous>.exports.register
 FNF:4
 FNH:4
-FNDA:12,validEmail
+FNDA:6,validEmail
 FNDA:1,Object.<anonymous>.exports.userAuthHome
 FNDA:7,Object.<anonymous>.exports.login
 FNDA:7,Object.<anonymous>.exports.register
@@ -79,10 +81,10 @@ DA:6,1
 DA:7,1
 DA:8,1
 DA:9,1
-DA:10,12
-DA:11,12
-DA:12,12
-DA:13,12
+DA:10,6
+DA:11,6
+DA:12,6
+DA:13,6
 DA:14,1
 DA:15,1
 DA:16,1
@@ -139,7 +141,7 @@ DA:66,4
 DA:67,7
 LF:67
 LH:67
-BRDA:9,0,0,12
+BRDA:9,0,0,6
 BRDA:15,1,0,1
 BRDA:19,2,0,7
 BRDA:20,3,0,6
@@ -166,6 +168,7 @@ BRF:23
 BRH:23
 end_of_record
 TN:
+
 SF:database\database.js
 FN:6,getAllUsers
 FN:11,findUserByEmail
@@ -176,6 +179,7 @@ FN:37,createEvent
 FN:53,__setMockUsers
 FNF:7
 FNH:7
+
 FNDA:5,getAllUsers
 FNDA:2,findUserByEmail
 FNDA:1,createUser
@@ -255,7 +259,7 @@ BRF:9
 BRH:9
 end_of_record
 TN:
-SF:database\voldatabase.js
+SF:database/voldatabase.js
 FN:13,getAllVolunteers
 FN:18,findVolunteerById
 FN:23,getAllEvents
