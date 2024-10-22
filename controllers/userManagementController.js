@@ -12,7 +12,7 @@ exports.manage = async (req, res) => {
   const { email, name, address, city, zipcode, state, skills, availability } = req.body;
 
   try {
-      //looks if same event is already created
+      //looks if profile with this email already exists
       existingProfile = await db.findProfileByEmail(email);
 
       //If this profile does not currently exist we create a new one
