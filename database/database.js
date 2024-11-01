@@ -73,9 +73,18 @@ const createProfile = (profileData) =>{ //creates a profile if there is not one 
     return newProfile;
 }
 
+const updateProfile = (profileData) => {
+  const index = profiles.findIndex((profile) => profile.email === profileData.email);
+  if (index !== -1) {
+    profiles[index] = { ...profiles[index], ...profileData };
+    return profiles[index];
+  }
+  return null;
+};
+
 const findProfileByEmail = (email) => { //checks to see if there is a profile matching the given email
     db = getAllUsers();
     return db.find(profile => profile.email === email);
 };
 
-module.exports = { getAllUsers, findUserByEmail, createUser, __setMockUsers, findEventByNameAndDate, createEvent, getAllEvents };
+module.exports = { getAllUsers, findUserByEmail, createUser, __setMockUsers, findEventByNameAndDate, createEvent, getAllEvents, createProfile, findProfileByEmail, updateProfile };
