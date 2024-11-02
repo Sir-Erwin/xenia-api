@@ -1,4 +1,4 @@
-const db = require('../database/database'); // Adjust the path as per your project
+const db = require('../database/database');
 
 describe('Database Module', () => {
     let initialUsers;
