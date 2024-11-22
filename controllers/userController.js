@@ -12,6 +12,11 @@ validEmail = (email) => {
   return emailRegex.test(email);
 }
 
+exports.getAllUsers = async (req, res, next) => {
+  const users = await db.getAllUsers();
+  res.status(200).json(users);
+}
+
 exports.userAuthHome = (req, res, next) => {
   res.status(403).json({ message: "This Route Works" }); // users: db.getAllUsers() => Only For Debugging
 };

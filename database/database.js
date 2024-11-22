@@ -15,36 +15,53 @@ const driver = neo4j.driver(
 
 const getAllUsers = async () => {
     const session = driver.session();
-  try {
-    const result = await session.run('MATCH (u:User) RETURN u');
-    const users = result.records.map((record) => record.get('u').properties);
-    res.json(users);
-  } catch (error) {
-    console.error('Error fetching users:', error);
-  }finally {
-    await session.close();
-  }
+    try {
+        const result = await session.run('MATCH (u:User) RETURN u');
+        const users = result.records.map((record) => record.get('u').properties);
+        return (users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }finally {
+        await session.close();
+    }
 };
 
 
-const findUserByEmail = (email) => {
-    db = getAllUsers();
+const findUserByEmail = async (email) => {
+    db = await getAllUsers();
     return db.find(user => user.email === email);
 };
 
-const createUser = (userData) => {
-    db = getAllUsers();
+const createUser = async(userData) => {
     const newUser = {
-        id: users.length + 1,
         email: userData.email,
         pass: userData.pass
     };
-    users.push(newUser);
+    
+    const session = driver.session();
+    try {
+        const result = await session.run('CREATE (u:User {email: $email, pass: $pass}) RETURN u', {email: newUser.email, pass: newUser.pass});
+        return (result);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }finally {
+        await session.close();
+    }
+
     return newUser;
 };
 
-const getAllEvents = () => {
-    return events;  //also only for testing; substituting for database information
+const getAllEvents = async() => {
+    const session = driver.session();
+    try {
+        const result = await session.run('MATCH (e:Event) RETURN e');
+        const events = result.records.map((record) => record.get('e').properties);
+        return (events);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }finally {
+        await session.close();
+    }
 };
 
 const findEventByNameAndDate = (eventName) => {
