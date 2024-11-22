@@ -60,7 +60,7 @@ exports.register = async (req, res, next) => {
       }
       else {
         const hashedPass = await bcrypt.hash(req.body.pass, 10);
-        db.createUser({ email: req.body.email, pass: hashedPass });
+        db.createUserCred({ email: req.body.email, pass: hashedPass });
         res.status(201).json({ message: 'User registered successfully', user: req.body.email });
       }
 

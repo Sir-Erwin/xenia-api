@@ -31,10 +31,10 @@ describe('Database Module', () => {
         expect(user).toBeUndefined();
     });
 
-    test('createUser - should add a new user', () => {
+    test('createUserCred - should add a new user', () => {
         const newUser = { email: 'new@example.com', pass: 'hashedpass123' };
 
-        const createdUser = db.createUser(newUser);
+        const createdUser = db.createUserCred(newUser);
         const allUsers = db.getAllUsers();
 
         // Check that a new user is created

@@ -1,9 +1,10 @@
 //eventManagement.js
 const express = require('express');
 const router = express.Router();
-const {manage} = require ('../controllers/eventManagementController');
+const {addEvent, getAllEvents} = require ('../controllers/eventManagementController');
 
 //Route to create Event or update existing Event
-router.post('/manage', manage);
+router.post('/addEvent', addEvent);
 
+router.get('/allevents', getAllEvents);
 module.exports = router;
