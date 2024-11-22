@@ -12,8 +12,8 @@ exports.manage = async (req, res) => {
   const { email, name, address, city, zipcode, state, skills, availability } = req.body;
 
   try {
-      //looks if same event is already created
-      existingProfile = await db.findProfileByEmail(email);
+      //looks if profile with this email already exists
+      const existingProfile = await db.findProfileByEmail(email);
 
       //If this profile does not currently exist we create a new one
       if(!existingProfile){
@@ -39,6 +39,9 @@ exports.manage = async (req, res) => {
         existingProfile.state = state;
         existingProfile.skills = skills;
         existingProfile.availability = availability;
+
+        await db.updateProfile(existingProfile);
+        
         res.status(201).json({ message: 'Existing profile updated successfully'});
       }
   } catch(error) {
