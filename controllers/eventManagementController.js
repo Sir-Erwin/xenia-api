@@ -7,6 +7,10 @@ const db = require("../database/database")
 
 router.use(express.json());
 
+exports.getAllEvents = async (req, res) => {
+    const events = await db.getAllEvents();
+    res.status(200).json(events);
+};
 
 //either creates new event or updates existing one if Entered event already exists
 exports.addEvent = async (req, res) => {
@@ -31,7 +35,14 @@ exports.addEvent = async (req, res) => {
       
 };
 
-exports.getAllEvents = async (req, res) => {
-    const events = await db.getAllEvents();
-    res.status(200).json(events);
+exports.updateEvent = async (req, res) => {
+    const { eventName, eventDescrip, eventLoc, reqSkills, urg, date } = req.body;
+    const event_curr = await db.findEventByNameAndDate(eventName, date);
+    if(!event_curr){
+        res.status(404).json({message: 'Event not found'});
+    }
+    else{
+        await db.updateEvent(req.body);
+        res.status(200).json({message: 'Event updated successfully'});
+    }
 };

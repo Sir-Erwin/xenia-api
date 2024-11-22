@@ -71,6 +71,7 @@ const findEventByNameAndDate = async (eventName, eventDate) => {
 
 
 const createEvent = async (eventData) => {
+
     const newEvent = {
         skills: eventData.reqSkills, 
         date: eventData.date, 
@@ -90,6 +91,26 @@ const createEvent = async (eventData) => {
             urgency: newEvent.urgency
         });
         return (users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }finally {
+        await session.close();
+    }
+};
+
+const updateEvent = async (eventData) => {
+    const session = driver.session();
+    const newEvent = {
+        skills: eventData.reqSkills, 
+        date: eventData.date, 
+        urgency: eventData.urg, 
+        name: eventData.eventName, 
+        desc: eventData.eventDescrip,
+        location: eventData.eventLoc
+    }
+    try {
+        const result = await session.run('MATCH (e:Event {name: $name, date: $date}) SET e = $eventData RETURN e', {name: newEvent.name, date: newEvent.date, eventData: newEvent});
+        return (result);
     } catch (error) {
         console.error('Error fetching users:', error);
     }finally {
@@ -133,4 +154,4 @@ const findProfileByEmail = (email) => { //checks to see if there is a profile ma
     return db.find(profile => profile.email === email);
 };
 
-module.exports = { getAllUsers, findUserByEmail, createUserCred, __setMockUsers, findEventByNameAndDate, createEvent, getAllEvents, createProfile, findProfileByEmail, updateProfile };
+module.exports = { getAllUsers, findUserByEmail, createUserCred, __setMockUsers, findEventByNameAndDate, createEvent, updateEvent, getAllEvents, createProfile, findProfileByEmail, updateProfile };
