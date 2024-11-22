@@ -17,7 +17,8 @@
     "express": "^4.21.1",
     "http-errors": "~1.6.3",
     "jade": "^0.29.0",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "neo4j-driver": "^5.26.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",

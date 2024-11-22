@@ -1,12 +1,29 @@
+const neo4j = require('neo4j-driver');
+
 // database.js - Mock implementation for now
 let users = [{ id: 1, email: "test@example.com", pass: "$2b$10$CXSVyLnnQmK8th7/ln6qBOIKfLPW1q.8YBPyKtKxHZiK9.gICXbBm" }]; // Mock in-memory data store
 let events = [{ id: 1, eventName: "Event 1", eventDescrip: "Decription of Event 1", 
-    eventLoc: "Location of Event 1", reqSkills: ["Skill 1"], urg: "High", date: "2024-10-18"}]
+    eventLoc: "Location of Event 1", reqSkills: ["Skill 1"], urg: "High", date: "2024-10-18"}];
 let profiles = [{id: 1,email:'johndoe@email.com', name: "John Doe", address : "123 Main St.",
-                 city: "Houston", zipcode: "12345", state: "TX", skills: "Javascript", availability: "Fridays"}]
+                 city: "Houston", zipcode: "12345", state: "TX", skills: "Javascript", availability: "Fridays"}];
 
-const getAllUsers = () => {
-    return users; // Just for testing
+const driver = neo4j.driver(
+  'neo4j+s://af5f90e0.databases.neo4j.io', 
+  neo4j.auth.basic('neo4j', 'hha9PPEvbT4CbXqHA4yYB1CB-zB6XI1dPaVsU9hzb8k')
+);
+
+
+const getAllUsers = async () => {
+    const session = driver.session();
+  try {
+    const result = await session.run('MATCH (u:User) RETURN u');
+    const users = result.records.map((record) => record.get('u').properties);
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }finally {
+    await session.close();
+  }
 };
 
 
